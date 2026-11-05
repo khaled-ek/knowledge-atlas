@@ -9,7 +9,7 @@ from pathlib import Path
 app = FastAPI()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-print(BASE_DIR)
+
 app.mount(
     "/static",
     StaticFiles(directory=str(BASE_DIR / "static")),
