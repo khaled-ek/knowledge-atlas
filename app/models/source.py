@@ -1,14 +1,22 @@
+from __future__ import annotations
+
 import uuid
 from datetime import datetime, timezone
+from typing import TYPE_CHECKING
 
-from DateTime import DateTime
+from sqlalchemy import DateTime
 from sqlalchemy import String, Boolean,ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.sql import func
 
 from app.db.base import Base
-from app.models.Chunk import Chunk
-from app.models.user import User
+#from app.models.model_chunk import Chunk
+#from app.models.user import User
+
+if TYPE_CHECKING:
+    from app.models.model_chunk import Chunk
+    from app.models.user import User
 
 class Source(Base):
     __tablename__ = "sources"
@@ -45,23 +53,25 @@ class Source(Base):
 
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
-        default=lambda: datetime.now(timezone.utc),
+        server_default=func.now(),
         nullable=False
     )
 
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
-        default=lambda: datetime.now(timezone.utc),
-        onupdate=lambda: datetime.now(timezone.utc),
+        server_default=func.now(),
+        server_onupdate=func.now(),
         nullable=False
     )
 
     chunks: Mapped[list["Chunk"]] = relationship(
+        "Chunk",
         back_populates="source",
         cascade="all, delete-orphan"
     )
 
     user: Mapped["User"] = relationship(
+        "User",
         back_populates="sources",
     )
 

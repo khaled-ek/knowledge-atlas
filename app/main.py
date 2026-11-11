@@ -6,18 +6,24 @@ from web.routes import webapp_router
 from fastapi.templating import Jinja2Templates
 from pathlib import Path
 
+
 app = FastAPI()
 
+# Project directories
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+TEMPLATES_DIR = BASE_DIR / "teplates"
+STATIC_DIR = BASE_DIR / "static"
+
 
 app.mount(
     "/static",
-    StaticFiles(directory=str(BASE_DIR / "static")),
+    StaticFiles(directory=str(STATIC_DIR)),
     name="static",
 )
 
 templates = Jinja2Templates(
-    directory=str(BASE_DIR / "templates")
+    directory=str(TEMPLATES_DIR)
 )
 
 app.include_router(webapp_router)

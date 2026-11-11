@@ -1,15 +1,23 @@
+from __future__ import annotations
+
 import string
 import uuid
 from datetime import datetime, timezone
+from typing import TYPE_CHECKING
 
-from DateTime import DateTime
+from sqlalchemy import DateTime
 from sqlalchemy import String, Boolean, ForeignKey, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.dialects.postgresql import UUID, JSONB
+from sqlalchemy.sql import func
 from pgvector.sqlalchemy import Vector
 
 from app.db.base import Base
-from app.models.source import Source
+
+if TYPE_CHECKING:
+    from app.models.source import Source
+
+
 
 class Chunk(Base):
     __tablename__ = "document_chunks"
@@ -66,11 +74,12 @@ class Chunk(Base):
 
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
-        default=lambda: datetime.now(timezone.utc),
+        server_default=func.now(),
         nullable=False
     )
 
     source: Mapped["Source"] = relationship(
+        "Source",
         back_populates="chunks"
     )
 

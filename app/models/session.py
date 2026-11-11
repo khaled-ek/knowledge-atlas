@@ -1,27 +1,36 @@
+from __future__ import annotations
+
 import uuid
 from datetime import datetime, timezone
 
-from DateTime import DateTime
+from sqlalchemy import DateTime
 from sqlalchemy import String, Boolean,ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.sql import func
 
 from app.db.base import Base
-from app.models.message import Message
-from app.models.user import User
+from typing import TYPE_CHECKING
+#from app.models.message import Message
+#from app.models.user import User
 
-class Session(Base):
-    __tablename__ = "sessions"
+if TYPE_CHECKING:
+    from app.models.user import User
+    from app.models.message import Message
 
-    id: Mapped[UUID] = mapped_column(
+
+class ChatSession(Base):
+    __tablename__ = "chat_sessions"
+
+    id: Mapped[uuid.UUID] = mapped_column(
         UUID (as_uuid=True),
         primary_key=True,
         default=uuid.uuid4
     )
 
-    user_id: Mapped[UUID] = mapped_column(
-        UUID (as_uuid=True),
-        foreign_key="user.id",
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("users.id", ondelete="CASCADE"),
         nullable=False,
         index=True
     )
@@ -32,22 +41,23 @@ class Session(Base):
 
     created_at: Mapped[datetime] = mapped_column(
         DateTime (timezone=True),
-        default = lambda: datetime.now(timezone.utc),
+        server_default=func.now(),
         nullable=False
     )
 
     updated_at: Mapped[datetime] = mapped_column(
         DateTime (timezone=True),
-        default=lambda: datetime.now(timezone.utc),
-        onupdate=lambda: datetime.now(timezone.utc),
+        server_default=func.now(),
+        server_onupdate=func.now(),
         nullable=False
     )
 
-    messages: Mapped[list["Message"]] = relationship(
+    messages: Mapped[list[Message]] = relationship(
+        "Message",
         back_populates="session",
         cascade="all, delete-orphan"
     )
-
     user: Mapped["User"] = relationship(
+        "User",
         back_populates="sessions"
     )

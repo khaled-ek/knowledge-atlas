@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome | Knowledge Atlas</title>
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/welcome_style.css') }}">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="logo">Knowledge Atlas</div>
+    <div class="nav-links">
+      <a href="/login" class="btn-secondary">Log In</a>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <header class="hero-container">
+    <div class="hero-content">
+      <!-- <span class="badge">Blog API & Management</span> -->
+      <h1>Welcome to <span>Knowledge Atlas</span></h1>
+      <p>
+        Build, manage, and scale your content seamlessly. Explore documentation,
+        test API endpoints, or dive right into your blog dashboard.
+      </p>
+
+      <div class="cta-buttons">
+        <a href="/login" class="btn-primary">Get Started / Log In</a>
+        <!-- <a href="/api/docs/" class="btn-secondary">View API Docs</a> -->
+      </div>
+    </div>
+  </header>
+
+</body>
+</html>

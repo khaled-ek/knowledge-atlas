@@ -9,6 +9,7 @@ from fastapi.templating import Jinja2Templates
 from pathlib import Path
 from uuid import uuid4
 
+from starlette.datastructures import FormData
 
 webapp_router = APIRouter()
 
@@ -29,7 +30,7 @@ ALLOWED_TYPES = {
 def home(request: Request):
     return templates.TemplateResponse(
         request=request,
-        name="home.html",
+        name="welcome.html",
     )
 
 
@@ -39,6 +40,45 @@ async def upload_page(request: Request):
         request=request,
         name="upload.html",
     )
+
+
+@webapp_router.route("/register", methods=["GET", "POST"])
+async def register(request: Request, form_data: FormData):
+    if request.method == "GET":
+        return templates.TemplateResponse(
+            request=request,
+            name="register.html"
+        )
+
+    elif request.method == "POST":
+        return templates.TemplateResponse(
+            request=request,
+            name="register.html",
+        )
+    else:
+        return templates.TemplateResponse(
+            request=request,
+            name="register.html",
+        )
+
+@webapp_router.route("/login", methods=["GET", "POST"])
+async def login(request: Request):
+    if request.method == "GET":
+        return templates.TemplateResponse(
+            request=request,
+            name="login.html",
+        )
+
+    elif request.method == "POST":
+        return templates.TemplateResponse(
+            request=request,
+            name="login.html",
+        )
+    else:
+        return templates.TemplateResponse(
+            request=request,
+            name="login.html",
+        )
 
 
 
