@@ -33,8 +33,7 @@ class UserRepository:
         db: Session,
         full_name: str,
         email: str,
-        hashed_password: str,
-        is_active: bool
+        hashed_password: str
     ) -> User:
 
         """
@@ -53,3 +52,9 @@ class UserRepository:
             hashed_password=hashed_password,
             is_active=True
         )
+
+        db.add(new_user)
+        db.commit()
+        db.refresh(new_user)
+
+        return new_user

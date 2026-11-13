@@ -1,18 +1,32 @@
 
 import uvicorn
-from fastapi import FastAPI
-from fastapi.staticfiles import StaticFiles
-from web.routes import webapp_router
-from fastapi.templating import Jinja2Templates
 from pathlib import Path
 
+from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+from starlette.middleware.sessions import SessionMiddleware
+
+
+import app.models
+from app.web.routes import webapp_router
+from app.core.config import settings
 
 app = FastAPI()
+
+app.add_middleware(
+    SessionMiddleware,
+    secret_key=settings.SECRET_KEY,
+    seesion_cookie="knowlege_atlas_session",
+    max_age=60 * 60 * 24,
+    samesite="lax",
+    https_only=settings.APP_ENV == "production"
+)
 
 # Project directories
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-TEMPLATES_DIR = BASE_DIR / "teplates"
+TEMPLATES_DIR = BASE_DIR / "templates"
 STATIC_DIR = BASE_DIR / "static"
 
 
@@ -30,7 +44,7 @@ app.include_router(webapp_router)
 
 def main():
     uvicorn.run(
-        "main:app",
+        "app.main:app",
         host="127.0.0.1",
         port=8000,
         reload=True,

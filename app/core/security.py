@@ -1,6 +1,7 @@
 
 from pwdlib import PasswordHash
 
+
 # Initialize Argon2 password hashing
 password_hash = PasswordHash.recommended()
 
@@ -18,7 +19,7 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
     Verify a plain-text password against a hashed password.
     :param plain_password: The plain-text password to verify
     :param hashed_password: The hashed password to verify
-    :return: a boolean value indicating whether or not the password matches the hashed password.
+    :return: a boolean value indicating whether the password matches the hashed password or not.
     """
 
     return password_hash.verify(
