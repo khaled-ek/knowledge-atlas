@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 from typing import TYPE_CHECKING
 
 from sqlalchemy import DateTime
-from sqlalchemy import String, Boolean,ForeignKey
+from sqlalchemy import String, BigInteger,ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql import func
@@ -43,6 +43,16 @@ class Source(Base):
         String(500),
         nullable=False,
         unique=True
+    )
+
+    file_type: Mapped[str] = mapped_column(
+        String(100),
+        nullable=False
+    )
+
+    file_size_bytes: Mapped[int] = mapped_column(
+        BigInteger,
+        nullable=False
     )
 
     status: Mapped[str] = mapped_column(

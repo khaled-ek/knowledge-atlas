@@ -17,9 +17,9 @@ app = FastAPI()
 app.add_middleware(
     SessionMiddleware,
     secret_key=settings.SECRET_KEY,
-    seesion_cookie="knowlege_atlas_session",
+    session_cookie="knowlege_atlas_session",
     max_age=60 * 60 * 24,
-    samesite="lax",
+    same_site="lax",
     https_only=settings.APP_ENV == "production"
 )
 

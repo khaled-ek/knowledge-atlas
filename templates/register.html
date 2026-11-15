@@ -10,6 +10,9 @@
     <div class="login-container">
         <div class="login-card">
             <h2>Registration page</h2>
+            {% if error %}
+                <p style="color: red;">{{ error }}</p>
+            {% endif %}
             <form method="POST" action="/register">
                 <div class="input-group">
                     <label for="full_name"> You name</label>

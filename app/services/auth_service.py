@@ -29,6 +29,7 @@ class AuthService:
         email: str,
         password: str
     ):
+        print("AUTH SERVICE db:", type(db))
         user = UserRepository.get_user_by_email(
             db=db,
             email=email,

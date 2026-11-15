@@ -10,6 +10,12 @@
     <div class="login-container">
         <div class="login-card">
             <h2>Login page</h2>
+            {% if error %}
+                <p style="color: red;">{{ error }}</p>
+            {% endif %}
+            {% if registered==true %}
+                <p style="color: green;">User was registered </p>
+            {% endif %}
             <form method="POST" action="/login">
                 <div class="input-group">
                     <label for="email"> Email address</label>

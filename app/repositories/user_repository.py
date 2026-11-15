@@ -26,7 +26,22 @@ class UserRepository:
             User.email == email
         )
 
+
+
         return db.scalar(statement)
+
+    @staticmethod
+    def get_user_by_id(
+        db=Session,
+        user_id=uuid.UUID
+    ):
+
+        statement = select(User).where(
+            User.id == user_id
+        )
+
+        return db.scalar(statement)
+
 
     @staticmethod
     def create_user(

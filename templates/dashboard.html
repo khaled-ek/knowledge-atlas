@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Library | Knowledge Atlas</title>
+    <title>Dashboard | Knowledge Atlas</title>
     <link rel="stylesheet" href="{{ url_for('static', path='/css/style.css') }}">
 </head>
 <body>
@@ -14,6 +14,8 @@
                 <span class="brand-icon">K</span>
                 <span>Knowledge Atlas</span>
             </a>
+
+            <h3>Welcome {{ user.name }}!</h3>
 
             <div class="sidebar-bottom">
                 <span class="avatar">U</span>

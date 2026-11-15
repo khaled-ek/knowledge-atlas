@@ -1,14 +1,12 @@
 #from fastapi import APIRouter
+import uuid
 
-from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, Request
+from fastapi import APIRouter, File, HTTPException, UploadFile, Request
 import jinja2
 from fastapi.templating import Jinja2Templates
-#from sqlalchemy.orm import Session
 from fastapi import Depends, Form
 from fastapi.responses import RedirectResponse
 
-#from app.database import get_db
-#from app.documents.models import Document
 from pathlib import Path
 from uuid import uuid4
 
@@ -21,7 +19,9 @@ from app.repositories.user_repository import UserRepository
 from app.api.dependencies import get_db
 from app.schemas.auth import UserLogin
 from app.services.auth_service import AuthService
-
+from app.models.user import User
+from app.api.dependencies import get_current_user_for_page
+from app.api.dependencies import get_current_user
 
 from starlette.datastructures import FormData
 
@@ -31,7 +31,7 @@ webapp_router = APIRouter()
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
 
-STORAGE_DIR = Path(f"{BASE_DIR}/storage/documents")
+STORAGE_DIR = Path(f"{BASE_DIR}/storage/uploads")
 MAX_FILE_SIZE = 10 * 1024 * 1024  # 10 MB
 
 ALLOWED_TYPES = {
@@ -64,7 +64,7 @@ def home(request: Request):
 async def upload_page(request: Request):
     return templates.TemplateResponse(
         request=request,
-        name="upload.html",
+        name="dashboard.html",
     )
 
 
@@ -135,11 +135,12 @@ async def register(
 
 
 
-@webapp_router.route("/login", methods=["GET", "POST"])
+@webapp_router.api_route("/login", methods=["GET", "POST"])
 async def login(
     request: Request,
     db: Session = Depends(get_db)
 ):
+
     if request.method == "GET":
         return templates.TemplateResponse(
             request=request,
@@ -163,6 +164,7 @@ async def login(
             context={"error": "Please enter valid credentials"},
             status_code=422
         )
+
 
     # Authenticate the user
     user = AuthService.authenticate_user(
@@ -190,10 +192,29 @@ async def login(
         status_code=303
     )
 
+@webapp_router.get("/dashboard")
+async def dashboard(
+    request: Request,
+    user: User | RedirectResponse = Depends(get_current_user_for_page)
+):
+    if isinstance(user, RedirectResponse):
+        return user
+
+    return templates.TemplateResponse(
+        request=request,
+        name="dashboard.html",
+        context={"user": user}
+    )
+
+@webapp_router.post("/sources")
+async def upload_source(
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+
+    pass
 
 
-
-#router = APIRouter(prefix="/documents", tags=["documents"])
 
 @webapp_router.post("/upload")
 async def upload_document(
@@ -231,7 +252,7 @@ async def upload_document(
 
         return templates.TemplateResponse(
             request=request,
-            name="upload.html",
+            name="dashboard.html",
             context={
                 "success_message": "File uploaded successfully!",
                 "filename": original_name,
@@ -244,3 +265,12 @@ async def upload_document(
 
     finally:
         await file.close()
+
+@webapp_router.post("/logout")
+async def logout(request: Request):
+    request.session.clear()
+
+    return RedirectResponse(
+        url="/login",
+        status_code=303
+    )
