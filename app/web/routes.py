@@ -16,6 +16,7 @@ from sqlalchemy.orm import Session
 from app.schemas.auth import UserRegister
 from app.core.security import hash_password,verify_password
 from app.repositories.user_repository import UserRepository
+from app.repositories.source_repository import SourceRepository
 from app.api.dependencies import get_db
 from app.schemas.auth import UserLogin
 from app.services.auth_service import AuthService
@@ -24,6 +25,8 @@ from app.api.dependencies import get_current_user_for_page
 from app.api.dependencies import get_current_user
 
 from starlette.datastructures import FormData
+
+from app.services.source_services import SourceService
 
 webapp_router = APIRouter()
 
@@ -205,6 +208,52 @@ async def dashboard(
         name="dashboard.html",
         context={"user": user}
     )
+
+@webapp_router.post("/sources/upload")
+async def upload_document(
+    request: Request,
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user_for_page)
+):
+
+    if isinstance(user, RedirectResponse):
+        return user
+
+    source = await SourceService.upload_source(
+        db=db,
+        user_id=user.id,
+        file=file
+    )
+
+    return RedirectResponse(
+        url="/library",
+        status_code=303
+    )
+
+@webapp_router.get("/library")
+async def library(
+    request: Request,
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user_for_page)
+):
+    if isinstance(user, RedirectResponse):
+        return user
+
+    sources = SourceRepository.get_sources_by_user(
+        db=db,
+        user_id=user.id,
+    )
+
+    return templates.TemplateResponse(
+        request=request,
+        name="library.html",
+        context={
+            "user": user,
+            "sources": sources
+        }
+    )
+
 
 @webapp_router.post("/sources")
 async def upload_source(

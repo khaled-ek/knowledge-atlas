@@ -1,0 +1,99 @@
+
+.library-container {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.library-header {
+    margin-bottom: 30px;
+}
+
+.upload-section,
+.documents-section {
+    background: white;
+    padding: 24px;
+    margin-bottom: 30px;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+}
+
+.upload-section h2,
+.documents-section h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.upload-section form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+}
+
+.upload-section button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    background: #2563eb;
+    color: white;
+    cursor: pointer;
+}
+
+.document-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.document-card {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 18px;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+}
+
+.document-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    background: #fee2e2;
+    color: #b91c1c;
+    font-weight: bold;
+    border-radius: 8px;
+}
+
+.document-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.document-info h3 {
+    margin: 0 0 8px;
+    overflow-wrap: anywhere;
+}
+
+.document-info p {
+    margin: 4px 0;
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.document-status {
+    padding: 6px 12px;
+    border-radius: 20px;
+    background: #fef3c7;
+    color: #92400e;
+    font-size: 13px;
+}
+
+.empty-library {
+    padding: 35px 15px;
+    text-align: center;
+    color: #6b7280;
+}

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login page</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/library.css') }}">
+</head>
+<body class="login-body">
+    <div class="library-container">
+
+    <div class="library-header">
+        <div>
+            <h1>My Documents</h1>
+            <p>Manage your uploaded documents in Knowledge Atlas.</p>
+        </div>
+    </div>
+
+    <!-- Upload form -->
+    <section class="upload-section">
+
+        <h2>Upload a document</h2>
+
+        <form
+            action="/sources/upload"
+            method="POST"
+            enctype="multipart/form-data"
+        >
+
+            <input
+                type="file"
+                name="file"
+                accept=".pdf,application/pdf"
+                required
+            >
+
+            <button type="submit">
+                Upload PDF
+            </button>
+
+        </form>
+
+        <p>Maximum file size: 20 MB. PDF files only.</p>
+
+    </section>
+
+    <!-- Document list -->
+    <section class="documents-section">
+
+        <h2>Your documents</h2>
+
+        {% if sources %}
+
+            <div class="document-list">
+
+                {% for source in sources %}
+
+                    <article class="document-card">
+                        <!--
+                        <div class="document-icon">
+                            <span>PDF</span>
+                        </div> -->
+
+                        <div class="document-info">
+
+                            <h3>{{ source.original_file }}</h3>
+
+                            <p>
+                                {{ "%.2f"|format(source.file_size_bytes / 1048576) }}
+                                MB
+                            </p>
+
+                            <p>
+                                Uploaded:
+                                {{ source.created_at.strftime("%d %b %Y, %H:%M") }}
+                            </p>
+
+                        </div>
+
+                        <div> <!-- class="document-status"-->
+                            {{ source.status | title }}
+                        </div>
+
+                    </article>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div class="empty-library">
+
+                <h3>No documents yet</h3>
+
+                <p>
+                    You haven't uploaded any documents.
+                    Upload your first PDF to get started.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </section>
+
+</div>
+
+
+</body>
+</html>

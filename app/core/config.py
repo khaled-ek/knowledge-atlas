@@ -15,7 +15,22 @@ class Settings(BaseSettings):
 
     SECRET_KEY: str
 
-    UPLOAD_DIR: Path = BASE_DIR / "storage" / "uploads"
+    OPEN_API_KEY: str
+
+    EMBEDDING_MODEL: str = "text-embedding-3-small"
+
+    UPLOAD_DIRECTORY: Path = BASE_DIR / "storage" / "uploads"
+
+    MAX_UPLOAD_SIZE_MB: int = 20
+
+    FILE_READ_CHUNK_SIZE: int = 1024 * 1024  # 1 MB
+
+    CHUNK_SIZE: int = 500  # tokens
+    CHUNK_OVERLAP: int = 75  # tokens
+
+    ALLOWED_FILE_TYPES: list[str] = [
+        "application/pdf"
+    ]
 
     model_config = SettingsConfigDict(
         env_file=BASE_DIR / ".env",
